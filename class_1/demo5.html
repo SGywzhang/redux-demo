@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>demo 3</title>
+</head>
+
+<body>
+    <div id="title">标题</div>
+    <div id="content">内容</div>
+    <script src="./createStore.js"></script>
+    <script>
+
+        var {createStore} = redux
+
+        var render = function (state) {
+            document.getElementById('title').innerHTML = state.title
+            document.getElementById('content').innerHTML = state.content
+        }
+        
+        // 自定义的dispatch过程
+        var appReducer = function (state,action) {
+            // 1. 返回默认state
+            if(!state){
+                return {
+                    title:"初始化的title",
+                    content : "初始化的content"
+                }
+            }
+            // 根据action.type返回相应的state
+            switch (action.type) {
+                case 'CHANGE_TITLE':
+                    //state修改
+                    return {
+                        ...state,
+                        title: action.newTitle
+                    }
+                default:
+                    return state
+            }
+        }
+        var store = createStore(appReducer)
+
+        store.subscribe(function () {
+            render(store.getState())
+        })
+        store.subscribe(function () {
+            console.log(store.getState())
+        })
+        store.dispatch(
+            {
+                type: 'CHANGE_TITLE', // change_title
+                newTitle: 'this is new title'
+            }
+        )
+
+        // 初始化
+        render(store.getState())
+
+        // 如果我想修改标题？
+
+
+    </script>
+</body>
+
+</html>

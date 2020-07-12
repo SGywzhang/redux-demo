@@ -1,0 +1,55 @@
+<!-- 
+    demo1：在dispatch中通过action触发指定的state
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <h1 id="title">标题</h1>
+        <p id="content">内容</p>
+    </div>
+    <script>
+        var render = function(){
+            document.getElementById('title').innerHTML = state.title
+            document.getElementById('content').innerHTML = state.content
+        }
+
+        var state = {
+            title : '标题',
+            content : '内容'
+        }
+
+        var setState = function(newState){
+            state = {
+                ...state,
+                ...newState
+            }
+            render()
+        }
+
+        var dispatch = function(action){
+            switch(action.type){
+                case 'CHANGE_TITLE':
+                    setState({
+                        title : action.newTitle
+                    })
+                    break
+                default:
+                    break
+            }
+        }
+        
+        dispatch({type : 'CHANGE_TITLE' , newTitle : '你好啊！'})
+
+        
+
+        render()
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!-- 
+    demo5：彻底抽离封装内容
+ -->
+ <!DOCTYPE html>
+ <html lang="en">
+ 
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <title>Document</title>
+ </head>
+ 
+ <body>
+     <div>
+         <h1 id="title">标题</h1>
+         <p id="content">内容</p>
+     </div>
+     <script src="./createStore.js"></script>
+     <script>
+
+        var {createStore} = redux
+
+         var render = function (state) {
+             document.getElementById('title').innerHTML = state.title
+             document.getElementById('content').innerHTML = state.content
+         }
+
+         // reducer是个纯函数
+         var store = createStore(reducer)
+         // 一个store就是一个state及其相关管理函数
+         // store三个功能
+         //  1. 添加订阅     subscribe
+         //  2. 改变state   dispatch
+         //  3. 获取当前状态  getState
+ 
+         store.subscribe(() => {
+             var newState = store.getState()
+             render(newState)
+         })
+ 
+         store.dispatch({ type: 'CHANGE_TITLE', newTitle: '你好呢！' })
+     </script>
+ </body>
+ 
+ </html>

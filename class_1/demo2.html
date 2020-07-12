@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>demo 2</title>
+</head>
+<body>
+    <div id="title">标题</div>
+    <div id="content">内容</div>
+    <script>
+        // state中的状态渲染到页面中
+        var render = function(){
+            document.getElementById('title').innerHTML = state.title
+            document.getElementById('content').innerHTML = state.content
+        }
+        // 应用的状态
+        var state = {
+            title : "这是一个标题",
+            content : "这是一个内容"
+        }
+        // 改变状态的唯一方法 setState //react
+        
+        // 分发函数：只能接受预定的动作，对state进行预定的修改
+        // setState => dispatch
+        var dispatch = function(action){
+            // 
+            switch(action.type){
+                case 'CHANGE_TITLE':
+                    state = {
+                        ...state,
+                        title : action.newTitle
+                    }
+                    break
+                default :
+                    break
+            }
+            // 修改state之后需要进行其他函数的调用
+            
+            listeners.forEach(listener => listener())
+        }
+        
+        // 把全部需要在state修改之后执行的函数都放在这儿
+        var listeners = [] //监听者们
+        var subscribe = function(listener){ //订阅
+            listeners.push(listener)
+        }
+
+        subscribe(render)
+        subscribe(function(){
+            console.log(state)
+        })
+
+        
+        dispatch(
+            {
+                type : 'CHANGE_TITLE', // change_title
+                newTitle : 'this is new title'
+            }
+        )
+
+
+        // 初始化
+        render()
+
+        // 如果我想修改标题？
+        
+
+    </script>
+</body>
+</html>

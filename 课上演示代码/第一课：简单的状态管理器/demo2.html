@@ -1,0 +1,63 @@
+<!-- 
+    demo2：使dispatch具有复用性，添加订阅，整体称之为store
+ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <h1 id="title">标题</h1>
+        <p id="content">内容</p>
+    </div>
+    <script>
+        var render = function () {
+            document.getElementById('title').innerHTML = state.title
+            document.getElementById('content').innerHTML = state.content
+        }
+        
+
+        //store
+        var state = {
+            title: '标题',
+            content: '内容'
+        }
+
+        var dispatch = function (action) {
+            switch (action.type) {
+                case 'CHANGE_TITLE':
+                    var { newTitle } = action
+                    state = {
+                        ...state,
+                        title: newTitle
+                    }
+                    break
+                case 'CHANGE_CONTENT':
+                    var {newContent} = action
+                    state = {
+                        ...state,
+                        content : newContent
+                    }
+                default:
+                    break
+            }
+            listeners.forEach(listener => listener())
+        }
+        var listeners = []
+        var subscribe = function(listener){
+            listeners.push(listener)
+        }
+
+        subscribe(render)
+
+        dispatch({ type: 'CHANGE_TITLE', newTitle: '你好呢！' })
+    </script>
+</body>
+
+</html>

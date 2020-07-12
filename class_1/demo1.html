@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="title">标题</div>
+    <div id="content">内容</div>
+    <script>
+        // state中的状态渲染到页面中
+        var render = function(){
+            document.getElementById('title').innerHTML = state.title
+            document.getElementById('content').innerHTML = state.content
+        }
+        // 应用的状态
+        var state = {
+            title : "这是一个标题",
+            content : "这是一个内容"
+        }
+        // 改变状态的唯一方法 setState
+        var setState = function(newState){
+            state = {
+                ...state,
+                ...newState
+            }
+            render()
+        }
+        
+        // 分发函数：只能接受预定的动作，对state进行预定的修改
+        // setState => dispatch
+        var dispatch = function(action){
+            // 
+            switch(action.type){
+                case 'CHANGE_TITLE':
+                    setState({
+                        title : action.newTitle
+                    })
+                    break
+                default :
+                    break
+            }
+        }
+        
+        dispatch(
+            {
+                type : 'CHANGE_TITLE', // change_title
+                newTitle : 'this is new title'
+            }
+        )
+
+
+        // 初始化
+        render()
+
+        // 如果我想修改标题？
+        
+
+    </script>
+</body>
+</html>

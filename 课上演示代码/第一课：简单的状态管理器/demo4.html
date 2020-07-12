@@ -1,0 +1,92 @@
+<!-- 
+    demo4：为了使store拥有更强的复用性，抽离dispatch中的处理函数和功能
+ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <h1 id="title">标题</h1>
+        <p id="content">内容</p>
+    </div>
+    <script>
+        var render = function (state) {
+            document.getElementById('title').innerHTML = state.title
+            document.getElementById('content').innerHTML = state.content
+        }
+        
+        // reducer是个纯函数
+        var reducer = function (state,action) {
+            if(!state){
+                return {
+                    title : '在reducer中初始化的state',
+                    content : '初始化的reducer'
+                }
+            }
+            switch (action.type) {
+                case 'CHANGE_TITLE':
+                    return {
+                        ...state,
+                        title: action.newTitle
+                    }
+                    break
+                case 'CHANGE_CONTENT':
+                    return {
+                        ...state,
+                        content: action.newContent
+                    }
+                default:
+                    return state
+            }
+        }
+
+        var createStore = function (reducer) {
+            var state = null
+            var listeners = []
+
+            var dispatch = function (action) {
+                state = reducer(state,action)
+                listeners.forEach(listener => listener())
+            }
+
+            var subscribe = function (listener) {
+                listeners.push(listener)
+            }
+            var getState = function () {
+                return state
+            }
+            
+            // 利用reducer特性，初始化state
+            dispatch({})
+
+            return {
+                subscribe,
+                dispatch,
+                getState
+            }
+        }
+
+        var store = createStore(reducer)
+        // 一个store就是一个state及其相关管理函数
+        // store三个功能
+        //  1. 添加订阅     subscribe
+        //  2. 改变state   dispatch
+        //  3. 获取当前状态  getState
+
+        store.subscribe(() => {
+            var newState = store.getState()
+            render(newState)
+        })
+
+        store.dispatch({ type: 'CHANGE_TITLE', newTitle: '你好呢！' })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,78 @@
+<!-- 
+    demo3：为了实现代码复用，将创建store的过程包装起来，向外提供简洁的state控制方法
+ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <h1 id="title">标题</h1>
+        <p id="content">内容</p>
+    </div>
+    <script>
+        var render = function (state) {
+            document.getElementById('title').innerHTML = state.title
+            document.getElementById('content').innerHTML = state.content
+        }
+        var createStore = function () {
+            var state = {
+                title: '标题',
+                content: '内容'
+            }
+            var listeners = []
+
+            var dispatch = function (action) {
+                switch (action.type) {
+                    case 'CHANGE_TITLE':
+                        var { newTitle } = action
+                        state = {
+                            ...state,
+                            title: newTitle
+                        }
+                        break
+                    case 'CHANGE_CONTENT':
+                        var { newContent } = action
+                        state = {
+                            ...state,
+                            content: newContent
+                        }
+                    default:
+                        break
+                }
+                listeners.forEach(listener => listener())
+            }
+
+            var subscribe = function (listener) {
+                listeners.push(listener)
+            }   
+            var getState = function(){
+                return state
+            }
+
+            return {
+                subscribe,
+                dispatch,
+                getState
+            }
+        }
+
+        var store = createStore()
+
+
+        store.subscribe(()=>{
+            var newState = store.getState()
+            render(newState)
+        })
+
+        store.dispatch({ type: 'CHANGE_TITLE', newTitle: '你好呢！' })
+    </script>
+</body>
+
+</html>
